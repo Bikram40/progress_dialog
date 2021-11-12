@@ -7,7 +7,7 @@ enum ProgressDialogType { Normal, Download }
 String _dialogMessage = "Loading...";
 double _progress = 0.0, _maxProgress = 100.0;
 
-Widget _customBody;
+Widget? _customBody;
 
 TextAlign _textAlign = TextAlign.left;
 Alignment _progressWidgetAlignment = Alignment.centerLeft;
@@ -15,12 +15,12 @@ Alignment _progressWidgetAlignment = Alignment.centerLeft;
 TextDirection _direction = TextDirection.ltr;
 
 bool _isShowing = false;
-BuildContext _context, _dismissingContext;
-ProgressDialogType _progressDialogType;
+BuildContext? context, _dismissingContext;
+ProgressDialogType? _progressDialogType;
 bool _barrierDismissible = true, _showLogs = false;
 
 TextStyle _progressTextStyle = TextStyle(
-        color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w400),
+    color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w400),
     _messageStyle = TextStyle(
         color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w600);
 
@@ -35,15 +35,15 @@ Widget _progressWidget = Image.asset(
 );
 
 class ProgressDialog {
-  _Body _dialog;
+  _Body? _dialog;
 
   ProgressDialog(BuildContext context,
-      {ProgressDialogType type,
-        bool isDismissible,
-        bool showLogs,
-        TextDirection textDirection,
-        Widget customBody}) {
-    _context = context;
+      {ProgressDialogType? type,
+        bool? isDismissible,
+        bool? showLogs,
+        TextDirection? textDirection,
+        Widget? customBody}) {
+    context = context;
     _progressDialogType = type ?? ProgressDialogType.Normal;
     _barrierDismissible = isDismissible ?? true;
     _showLogs = showLogs ?? false;
@@ -52,20 +52,20 @@ class ProgressDialog {
   }
 
   void style(
-      {Widget child,
-      double progress,
-      double maxProgress,
-      String message,
-      Widget progressWidget,
-      Color backgroundColor,
-      TextStyle progressTextStyle,
-      TextStyle messageTextStyle,
-      double elevation,
-      TextAlign textAlign,
-      double borderRadius,
-      Curve insetAnimCurve,
-      EdgeInsets padding,
-      Alignment progressWidgetAlignment}) {
+      {Widget? child,
+        double? progress,
+        double? maxProgress,
+        String? message,
+        Widget? progressWidget,
+        Color? backgroundColor,
+        TextStyle? progressTextStyle,
+        TextStyle? messageTextStyle,
+        double? elevation,
+        TextAlign? textAlign,
+        double? borderRadius,
+        Curve? insetAnimCurve,
+        EdgeInsets? padding,
+        Alignment? progressWidgetAlignment}) {
     if (_isShowing) return;
     if (_progressDialogType == ProgressDialogType.Download) {
       _progress = progress ?? _progress;
@@ -88,12 +88,12 @@ class ProgressDialog {
   }
 
   void update(
-      {double progress,
-      double maxProgress,
-      String message,
-      Widget progressWidget,
-      TextStyle progressTextStyle,
-      TextStyle messageTextStyle}) {
+      {double? progress,
+        double? maxProgress,
+        String? message,
+        Widget? progressWidget,
+        TextStyle? progressTextStyle,
+        TextStyle? messageTextStyle}) {
     if (_progressDialogType == ProgressDialogType.Download) {
       _progress = progress ?? _progress;
     }
@@ -104,7 +104,7 @@ class ProgressDialog {
     _messageStyle = messageTextStyle ?? _messageStyle;
     _progressTextStyle = progressTextStyle ?? _progressTextStyle;
 
-    if (_isShowing) _dialog.update();
+    if (_isShowing) _dialog!.update();
   }
 
   bool isShowing() {
@@ -115,7 +115,7 @@ class ProgressDialog {
     try {
       if (_isShowing) {
         _isShowing = false;
-        Navigator.of(_dismissingContext).pop();
+        Navigator.of(_dismissingContext!).pop();
         if (_showLogs) debugPrint('ProgressDialog dismissed');
         return Future.value(true);
       } else {
@@ -134,7 +134,7 @@ class ProgressDialog {
       if (!_isShowing) {
         _dialog = new _Body();
         showDialog<dynamic>(
-          context: _context,
+          context: context!,
           barrierDismissible: _barrierDismissible,
           builder: (BuildContext context) {
             _dismissingContext = context;
@@ -147,7 +147,7 @@ class ProgressDialog {
                   elevation: _dialogElevation,
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.all(Radius.circular(_borderRadius))),
+                      BorderRadius.all(Radius.circular(_borderRadius))),
                   child: _dialog),
             );
           },
